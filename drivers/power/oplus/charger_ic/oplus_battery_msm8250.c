@@ -6869,7 +6869,7 @@ void smblib_usb_plugin_hard_reset_locked(struct smb_charger *chg)
 			g_oplus_chip->chargerid_volt_got = false;
 			g_oplus_chip->charger_type = POWER_SUPPLY_TYPE_UNKNOWN;
 			cancel_delayed_work(&g_oplus_chip->update_work);
-			oplus_chg_wake_update_work();
+		        oplus_chg_wake_update_work();
 		}
 		chg->pre_current_ma = -1;
 #endif
