@@ -44,7 +44,6 @@
 #define BQ27541_REG_LOGIDX		0x32
 #define BQ27541_REG_LOGBUF		0x34
 #define BQ27541_REG_DOD0		0x36
-#define BQ27541_REG_DCAP		0x3c
 #define BQ27541_FLAG_DSC		BIT(0)
 #define BQ27541_FLAG_FC			BIT(9)
 #define BQ27541_CS_DLOGEN		BIT(15)
@@ -105,7 +104,6 @@
 #define BQ27411_REG_FCU			0x2c
 #define BQ27411_REG_FCF			0x2e
 #define BQ27411_REG_SOU			0x30
-#define BQ27411_REG_DCAP		0x3c
 #define BQ27411_REG_DO0			0x66
 #define BQ27411_REG_DOE			0x68
 #define BQ27411_REG_TRM			0x6a
@@ -235,12 +233,22 @@
 #define BQ28Z610_MAC_CELL_VOLTAGE_ADDR			0x40
 #define BQ28Z610_MAC_CELL_VOLTAGE_SIZE			4//total 34byte,only read 4byte(aaAA bbBB)
 
+#define ZY602_MAC_CELL_DOD0_EN_ADDR			    0x00
+#define ZY602_MAC_CELL_DOD0_CMD				    0x00E3
+#define ZY602_MAC_CELL_DOD0_ADDR				0x40
+#define ZY602_MAC_CELL_DOD0_SIZE				12
+
 #define BQ28Z610_MAC_CELL_DOD0_EN_ADDR			0x3E
 #define BQ28Z610_MAC_CELL_DOD0_CMD				0x0074
 #define BQ28Z610_MAC_CELL_DOD0_ADDR				0x4A
 #define BQ28Z610_MAC_CELL_DOD0_SIZE				6
 
 #define ZY0603_MAC_CELL_SOCCAL0				0x56
+
+#define ZY602_MAC_CELL_QMAX_EN_ADDR			0x00
+#define ZY602_MAC_CELL_QMAX_CMD				0x00E4
+#define ZY602_MAC_CELL_QMAX_ADDR_A			0x40
+#define ZY602_MAC_CELL_QMAX_SIZE_A			18
 
 #define BQ28Z610_MAC_CELL_QMAX_EN_ADDR			0x3E
 #define BQ28Z610_MAC_CELL_QMAX_CMD				0x0075
@@ -302,7 +310,21 @@
 #define U_DELAY_5_MS	5000
 #define M_DELAY_10_S	10000
 
-#define BCC_PARMS_COUNT 18
+typedef enum
+{
+	DOUBLE_SERIES_WOUND_CELLS = 0,
+	SINGLE_CELL,
+	DOUBLE_PARALLEL_WOUND_CELLS,
+} SCC_CELL_TYPE;
+
+typedef enum
+{
+	TI_GAUGE = 0,
+	SW_GAUGE,
+	UNKNOWN_GAUGE_TYPE,
+} SCC_GAUGE_TYPE;
+
+#define BCC_PARMS_COUNT 19
 #define BCC_PARMS_COUNT_LEN 69
 #define ZY0602_KEY_INDEX	0X02
 struct cmd_address {
@@ -330,7 +352,6 @@ struct cmd_address {
 	u8	reg_fcu;
 	u8	reg_fcf;
 	u8	reg_sou;
-	u8	reg_dcap;
 	u8	reg_do0;
 	u8	reg_doe;
 	u8	reg_trm;
@@ -448,8 +469,8 @@ struct chip_bq27541 {
 	int fcf_pre;
 	int sou_pre;
 	int do0_pre;
+	int passed_q_pre;
 	int doe_pre;
-	int dcap_pre;
 	int trm_pre;
 	int pc_pre;
 	int qs_pre; //add gauge reg print log end

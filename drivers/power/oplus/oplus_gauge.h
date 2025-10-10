@@ -24,11 +24,21 @@ struct oplus_plat_gauge_operations {
 	int (*get_plat_battery_current)(void);
 };
 
+struct oplus_test_result {
+	int test_count_total;
+	int test_count_now;
+	int test_fail_count;
+	int real_test_count_now;
+	int real_test_fail_count;
+};
+
 struct oplus_external_auth_chip {
 	int (*get_external_auth_hmac)(void);
 	int (*start_test_external_hmac)(int count);
 	int (*get_hmac_test_result)(int *count_total, int *count_now, int *fail_count);
 	int (*get_hmac_status) (int *status, int *fail_count, int *total_count, int *real_fail_count, int *real_total_count);
+	struct oplus_test_result test_result;
+	struct delayed_work test_work;
 };
 
 struct oplus_gauge_operations {
@@ -48,7 +58,6 @@ struct oplus_gauge_operations {
 	int (*get_battery_qs)(void);
 	int (*get_battery_temperature)(void);
 	bool (*is_battery_present)(void);
-	int (*get_batt_design_capacity)(void);
 	int (*get_batt_remaining_capacity)(void);
 	int (*get_battery_soc)(void);
 	int (*get_average_current)(void);
@@ -125,7 +134,6 @@ int oplus_gauge_get_batt_temperature(void);
 int oplus_gauge_get_batt_soc(void);
 int oplus_gauge_get_batt_current(void);
 int oplus_gauge_get_sub_current(void);
-int oplus_gauge_get_design_capacity(void);
 int oplus_gauge_get_remaining_capacity(void);
 int oplus_gauge_get_device_type(void);
 int oplus_gauge_get_device_type_for_vooc(void);
