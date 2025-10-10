@@ -139,3 +139,9 @@ kernel/configs/android-*.cfg
 #Ignoring Android.bp link file
 #
 Android.bp
+
+#Ignore script and out dir
+anykernel/
+tc/
+out/
+build.log
