@@ -8,6 +8,7 @@ git clone https://gitlab.com/provasishh/clang-20.git tc
 
 DT=$(date +"%Y%m%d-%H%M")
 config="vendor/kona-perf_defconfig vendor/oplus.config"
+export PATH=$(pwd)/tc/clang/bin:$PATH
 
 MAKE_PATH=$(pwd)/tc/build-tools/bin/
 CROSS_COMPILE=$(pwd)/tc/aarch64-linux-android-4.9/bin/aarch64-linux-android-
@@ -24,10 +25,11 @@ TARGET_KERNEL_MAKE_ENV+="CC=$(pwd)/tc/clang/bin/clang"
 
 compile() {
 echo compiling kernel...
+BUILD_OPTIONS=(O=${OUT_DIR} ${TARGET_KERNEL_MAKE_ENV} LLVM_IAS=1 HOSTLDFLAGS="${TARGET_LINCLUDES}" ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip LLVM_IAS=1)
 
-make O=${OUT_DIR} ${TARGET_KERNEL_MAKE_ENV} LLVM_IAS=1 HOSTLDFLAGS="${TARGET_LINCLUDES}" ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip LLVM_IAS=1 $config
-
-make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} LLVM_IAS=1 HOSTCFLAGS="${TARGET_INCLUDES}" HOSTLDFLAGS="${TARGET_LINCLUDES}" O=${OUT_DIR} ${TARGET_KERNEL_MAKE_ENV} NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip LLVM_IAS=1 -j$(nproc --all) |& tee build.log
+make "${BUILD_OPTIONS[@]}" $config neoforge.config
+make "${BUILD_OPTIONS[@]}" menuconfig || true
+make "${BUILD_OPTIONS[@]}" -j$(nproc --all) |& tee build.log
 }
 
 zipping() {
@@ -38,7 +40,7 @@ cd anykernel || exit 1
     cp ../out/arch/arm64/boot/Image .
     cp ../out/arch/arm64/boot/dtbo.img .
     cp ../out/arch/arm64/boot/dtb .
-    zip -r9 El-Diablo-AOSP-${DT}.zip *
+    zip -r9 Neoforge-SukiSU-AOSP-Rev2.zip *
     rm Image dtbo.img dtb
     cd ..
 }
