@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 echo Cloning AnyKernel
-git clone https://github.com/provasish/AnyKernel3.git anykernel
+git clone https://github.com/Dextrobyte/AnyKernel3.git anykernel
 
 echo Cloning TC
 git clone https://gitlab.com/provasishh/clang-20.git tc
