@@ -25,7 +25,7 @@ TARGET_KERNEL_MAKE_ENV+="CC=$(pwd)/tc/clang/bin/clang"
 
 compile() {
 echo compiling kernel...
-BUILD_OPTIONS=(O=${OUT_DIR} ${TARGET_KERNEL_MAKE_ENV} LLVM_IAS=1 HOSTLDFLAGS="${TARGET_LINCLUDES}" ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip LLVM_IAS=1)
+BUILD_OPTIONS=(O=${OUT_DIR} ${TARGET_KERNEL_MAKE_ENV} LLVM_IAS=1 HOSTLDFLAGS="${TARGET_LINCLUDES}" ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip LLVM_IAS=1)
 
 make "${BUILD_OPTIONS[@]}" $config neoforge.config
 make "${BUILD_OPTIONS[@]}" menuconfig || true
