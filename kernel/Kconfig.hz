@@ -23,6 +23,13 @@ choice
 	  with lots of processors that may show reduced performance if
 	  too many timer interrupts are occurring.
 
+	config HZ_120
+		bool "120 HZ"
+	help
+	 Special stepping added for 120hz screen devices eg. rmx3371
+	 keeping this as multiple of screen refresh rate helps avoid
+	 micro-stuttering in UI animations. (battery saving)
+
 	config HZ_250
 		bool "250 HZ"
 	help
@@ -39,6 +46,13 @@ choice
 	 on SMP and NUMA systems and exactly dividing by both PAL and
 	 NTSC frame rates for video and multimedia work.
 
+	config HZ_360
+		bool "360 HZ"
+	help
+	 Special stepping added for 120hz screen devices eg. rmx3371
+	 keeping this as multiple of screen refresh rate helps avoid
+	 micro-stuttering in UI animations.
+
 	config HZ_1000
 		bool "1000 HZ"
 	help
@@ -50,8 +64,10 @@ endchoice
 config HZ
 	int
 	default 100 if HZ_100
+	default 120 if HZ_120
 	default 250 if HZ_250
 	default 300 if HZ_300
+	default 360 if HZ_360
 	default 1000 if HZ_1000
 
 config SCHED_HRTICK
